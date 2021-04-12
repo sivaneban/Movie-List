@@ -1,0 +1,12 @@
+<p>Movie List</p>
+<ol>
+    <li *ngFor="let movie of movies" [class.selected]="movie === selectedMovie" (click)="onSelect(movie)">
+      <a>
+        {{movie.title}}
+      </a>
+      
+      <br><br>
+      <img src="{{movie.poster}}" alt="{{movie.title}}">
+      <br><br>
+    </li>
+  </ol>  
