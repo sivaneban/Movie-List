@@ -1,12 +1,25 @@
-<p>Movie List</p>
-<ol>
-    <li *ngFor="let movie of movies" [class.selected]="movie === selectedMovie" (click)="onSelect(movie)">
-      <a>
-        {{movie.title}}
-      </a>
-      
-      <br><br>
-      <img src="{{movie.poster}}" alt="{{movie.title}}">
-      <br><br>
-    </li>
-  </ol>  
+<h1>Movie List</h1>
+<div *ngFor="let movie of movies" class="movie-container">
+	<div class="movie">
+		<div class="movie-preview">
+			<h2> {{movie.title}}</h2>
+			<br>
+            <img src="{{movie.poster}}" alt="{{movie.title}}">
+            <br>
+			
+		</div>
+		<div class="movie-info">
+			<div><span>Director: </span>{{movie.director}}</div>
+            <div><span>Year: </span>{{movie.year}}</div>
+            <div><span>Plot: </span>{{movie.plot}}</div>
+            <h4>{{movie.title}} Ratings</h4>
+            <ul>
+            <li *ngFor="let x of movie.ratings">
+                <div><span>Value: </span>{{x.value}} <span>Source: </span>{{x.source}}</div> 
+                
+            </li>
+            </ul>
+		</div>
+	</div>
+</div>
+
