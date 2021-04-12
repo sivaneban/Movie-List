@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Net.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System.Text.Json;
 
 namespace API.Controllers
 {
@@ -11,9 +13,10 @@ namespace API.Controllers
     [Route("[controller]")]
     public class MovieListController : ControllerBase
     {
-        private static readonly string[] Summaries = new[]
+        private static readonly HttpClient client = new HttpClient();
+        private static readonly string[] imdbIds = new[]
         {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
+            "tt2140553", "tt9397284", "tt6161168", "tt0111161", "tt0068646", "tt0110912", "tt0137523", "tt0468569", "tt6161168", "tt2993508"
         };
 
         private readonly ILogger<MovieListController> _logger;
@@ -24,16 +27,22 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<WeatherForecast> Get()
+        public async Task<List<Movie> >Get()
         {
-            var rng = new Random();
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
+            //string omdbUri;
+            client.DefaultRequestHeaders.Accept.Clear();
+
+            List <Movie> movies= new List<Movie>();
+
+            foreach(string Id in imdbIds)
             {
-                Date = DateTime.Now.AddDays(index),
-                TemperatureC = rng.Next(-20, 55),
-                Summary = Summaries[rng.Next(Summaries.Length)]
-            })
-            .ToArray();
+                var streamTask = client.GetStringAsync($"http://www.omdbapi.com/?i={Id}&apikey=2ec850f7");
+                var msg = await streamTask;
+                Movie movie = JsonSerializer.Deserialize<Movie>(msg);
+                movies.Add(JsonSerializer.Deserialize<Movie>(msg));
+            }
+
+            return movies;
         }
     }
 }
